@@ -7,6 +7,8 @@ SYS_READ  equ 3
 section .data
    inpline db 'Enter number of Fibonacci terms you want! (48=>n>=1)', 0xa
    inplen equ $ - inpline
+   errline db 'Range of n is [1, 48]', 0xa
+   errlen equ $ - errline
    nl db 0xa
    nlen equ $ - nl
    radix dd 10
@@ -70,13 +72,19 @@ _start:
    sub byte [ns+1], '0'
    mov al, byte [ns+1]
    add byte [n], al ;getting second digit
-   jmp atl1
+   jmp check
 
 sd:
 
    sub byte [ns], '0'
    mov al, byte [ns]
    mov byte [n], al
+
+check:
+   cmp byte [n],1
+   jl errocc
+   cmp byte [n],48
+   jg errocc
 
 atl1: ;at least 1
 
@@ -167,6 +175,15 @@ atl3: ;at least 3
    dec ecx
    cmp ecx, 0
    jnz l1
+   jmp _exit
+
+errocc:
+
+   mov rdx, errlen
+   mov rcx, errline
+   mov rbx, STDOUT
+   mov rax, SYS_WRITE
+   int 0x80
 
 _exit:
    mov eax, SYS_EXIT
