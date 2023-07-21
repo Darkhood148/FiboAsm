@@ -9,7 +9,7 @@ section .data
    inplen equ $ - inpline
    nl db 0xa
    nlen equ $ - nl
-   radix db 0xa
+   radix dd 10
 
 section .bss
    n resb 1
@@ -104,39 +104,42 @@ atl3: ;at least 3
    mov eax, dword [num1]
    add dword [num3], eax
 
+   ;call print_nl
+
    mov byte [lv], 0
-   mov ecx, [num3]
-   mov eax, arr
-   push eax
+   mov ecx, dword [num3]
+
+   ;call print_nl
+   mov edi, arr
    
    l2: ;loop for storing digits in array form
    mov eax, ecx
    mov edx,0
-   mov ebx, radix ;radix = 10
+   ;call print_nl
+   mov ebx, dword [radix] ;radix = 10
    div ebx ;num3/10
 
    mov ecx, eax ;storing quotient in ecx for cheking in loop condition at the end
-   pop eax
-   mov [eax], edx ;storing remainder of division in array
-   inc eax
-   push eax
-   loop l2
+   mov [edi], edx ;storing remainder of division in array
+   add byte [lv], 1
+   inc edi
+   cmp ecx, 0
+   jnz l2
 
-   mov ecx, lv ;No. of times loop l3 should execute
-   dec eax
+   mov ecx, dword [lv] ;No. of times loop l3 should execute
+   dec edi
 
    l3: ;for printing individual digits
    push ecx
    mov edx, 4
-   mov dword [temp], eax
+   mov ebx, [edi]
+   mov dword [temp], ebx
    add dword [temp], '0'
    mov ecx, temp
-   push eax
    mov ebx, STDOUT
    mov eax, SYS_WRITE
    int 0x80
-   pop eax
-   dec eax
+   dec edi
    pop ecx
    loop l3
 
