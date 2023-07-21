@@ -8,5 +8,5 @@ chmod 777 run.sh
 To install the x64 version do:
 ```
 chmod 777 run64.sh
-./run64
+./run64.sh
 ```
