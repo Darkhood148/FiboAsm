@@ -179,10 +179,10 @@ atl3: ;at least 3
 
 errocc:
 
-   mov rdx, errlen
-   mov rcx, errline
-   mov rbx, STDOUT
-   mov rax, SYS_WRITE
+   mov edx, errlen
+   mov ecx, errline
+   mov ebx, STDOUT
+   mov eax, SYS_WRITE
    int 0x80
 
 _exit:
